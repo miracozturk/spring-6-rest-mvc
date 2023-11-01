@@ -1,0 +1,20 @@
+package mozt.springframework.spring6restmvc.model;
+
+import lombok.Data;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.UUID;
+@Data
+public class Beverage {
+    private UUID id;
+    private Integer version;
+    private String beverageName;
+    private BeverageStyle beverageStyle;
+    private String upc;
+    private Integer quantityOnHand;
+    private BigDecimal price;
+    private LocalDateTime createdDate;
+    private LocalDateTime updatedDate;
+
+}
