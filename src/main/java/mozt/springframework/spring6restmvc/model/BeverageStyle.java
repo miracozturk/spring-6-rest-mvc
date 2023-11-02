@@ -1,5 +1,6 @@
 package mozt.springframework.spring6restmvc.model;
 
-public class BeverageStyle {
+public enum BeverageStyle {
+        LAGER, PILSNER, STOUT, GOSE, PORTER, ALE, WHEAT, IPA, PALE_ALE, SAISON
 
 }
