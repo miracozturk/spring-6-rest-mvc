@@ -2,12 +2,14 @@ package mozt.springframework.spring6restmvc.services;
 
 import mozt.springframework.spring6restmvc.model.Beverage;
 import mozt.springframework.spring6restmvc.model.BeverageStyle;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public class BeverageServiceImpl extends BeverageService {
+@Service
+public class BeverageServiceImpl implements BeverageService {
 
     @Override
     public Beverage getBeverageById(UUID id) {
