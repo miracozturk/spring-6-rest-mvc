@@ -65,4 +65,14 @@ public class CustomerServiceImpl implements CustomerService {
         log.debug("Customer Id: {}", savedCustomer.getId());
         return savedCustomer;
     }
+
+    @Override
+    public void updateCustomerById(UUID customerId, Customer customer) {
+        Customer exists = this.customerMap.get(customerId);
+        exists.setCustomerName(customer.getCustomerName());
+        exists.setLastModifiedDate(LocalDateTime.now());
+        exists.setVersion(exists.getVersion() + 1);
+        //no need reput to map this.customerMap.put(customerId, exist)
+        log.debug("Customer version:" + exists.getVersion());
+    }
 }

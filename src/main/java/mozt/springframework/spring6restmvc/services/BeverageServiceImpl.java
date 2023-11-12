@@ -97,4 +97,18 @@ public class BeverageServiceImpl implements BeverageService {
         this.bMap.put(savedBeverage.getId(), savedBeverage);
         return savedBeverage;
     }
+
+    @Override
+    public Beverage updateBeverageById(UUID beverageId, Beverage newBeverage) {
+        Beverage existing = this.bMap.get(beverageId);
+        existing.setBeverageName(newBeverage.getBeverageName());
+        existing.setBeverageStyle(newBeverage.getBeverageStyle());
+        existing.setPrice(newBeverage.getPrice());
+        existing.setUpdateDate(LocalDateTime.now());
+        existing.setUpc(newBeverage.getUpc());
+        existing.setVersion(existing.getVersion() + 1);
+        existing.setQuantityOnHand(newBeverage.getQuantityOnHand());
+        //normally it is not required to put The new object to the map again.
+        return existing;
+    }
 }

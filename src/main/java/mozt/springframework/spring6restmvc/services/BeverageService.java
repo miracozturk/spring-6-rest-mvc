@@ -12,4 +12,6 @@ BeverageService {
     List<Beverage> listBeverages();
 
     Beverage saveNewBeverage(Beverage beverage);
+
+    Beverage updateBeverageById(UUID beverageId, Beverage beverage);
 }

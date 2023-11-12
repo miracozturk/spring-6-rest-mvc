@@ -22,6 +22,16 @@ public class BeverageController {
 
     private final BeverageService bs;
 
+    @PutMapping("{beverageId}")
+    public ResponseEntity updateBeverageByID(@RequestParam("beverageId") UUID beverageId, @RequestBody Beverage beverage){
+        Beverage bSaved = this.bs.updateBeverageById(beverageId, beverage);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.LOCATION, "/api/v1/beverage/" + bSaved.getId());
+
+        ResponseEntity responseEntity = new ResponseEntity(headers, HttpStatus.NO_CONTENT);
+        return responseEntity;
+    }
+
     @PostMapping
     public ResponseEntity handlePost(@RequestBody Beverage beverage) {
         Beverage bRet = this.bs.saveNewBeverage(beverage);
