@@ -1,6 +1,7 @@
 package mozt.springframework.spring6restmvc.controllers;
 
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mozt.springframework.spring6restmvc.model.Beverage;
 import mozt.springframework.spring6restmvc.services.BeverageService;
@@ -15,7 +16,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Slf4j
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/beverage")
 public class BeverageController {
@@ -27,11 +28,13 @@ public class BeverageController {
         this.bs.patchBeverageById(beverageId, beverage);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
+
     @DeleteMapping("{beverageId}")
     public ResponseEntity deleteBeverageByID(@PathVariable("beverageId") UUID beverageId){
         this.bs.deleteBeverageById(beverageId);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
+
     @PutMapping("{beverageId}")
     public ResponseEntity updateBeverageByID(@PathVariable("beverageId") UUID beverageId, @RequestBody Beverage beverage){
         Beverage bSaved = this.bs.updateBeverageById(beverageId, beverage);
@@ -62,6 +65,5 @@ public class BeverageController {
         log.debug("Get Beverage by Id - In Controller Id: " + beverageId);
         return this.bs.getBeverageById(beverageId);
     }
-
 
 }
