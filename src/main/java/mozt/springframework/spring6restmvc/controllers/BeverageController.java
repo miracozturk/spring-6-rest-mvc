@@ -26,7 +26,10 @@ public class BeverageController {
     public ResponseEntity handlePost(@RequestBody Beverage beverage) {
         Beverage bRet = this.bs.saveNewBeverage(beverage);
 
-        return new ResponseEntity(HttpStatus.CREATED);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.LOCATION, "/api/v1/beverage" + bRet.getId());
+
+        return new ResponseEntity(headers, HttpStatus.CREATED);
     }
 
     @RequestMapping(method = RequestMethod.GET)
