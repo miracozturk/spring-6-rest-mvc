@@ -80,4 +80,21 @@ public class BeverageServiceImpl implements BeverageService {
 
         return new ArrayList<>(this.bMap.values());
     }
+
+    @Override
+    public Beverage saveNewBeverage(Beverage b) {
+        Beverage savedBeverage = Beverage.builder()
+                .id(UUID.randomUUID())
+                .createdDate(LocalDateTime.now())
+                .updateDate(LocalDateTime.now())
+                .version(1)
+                .beverageName(b.getBeverageName())
+                .beverageStyle(b.getBeverageStyle())
+                .quantityOnHand(b.getQuantityOnHand())
+                .upc(b.getUpc())
+                .price(b.getPrice())
+                .build();
+        this.bMap.put(savedBeverage.getId(), savedBeverage);
+        return savedBeverage;
+    }
 }

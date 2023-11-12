@@ -11,4 +11,5 @@ BeverageService {
 
     List<Beverage> listBeverages();
 
+    Beverage saveNewBeverage(Beverage beverage);
 }
