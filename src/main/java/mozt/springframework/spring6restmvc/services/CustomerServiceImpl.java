@@ -75,4 +75,9 @@ public class CustomerServiceImpl implements CustomerService {
         //no need reput to map this.customerMap.put(customerId, exist)
         log.debug("Customer version:" + exists.getVersion());
     }
+
+    @Override
+    public void deleteCustomerById(UUID customerId) {
+        this.customerMap.remove(customerId);
+    }
 }
