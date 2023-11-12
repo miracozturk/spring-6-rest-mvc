@@ -111,4 +111,9 @@ public class BeverageServiceImpl implements BeverageService {
         //normally it is not required to put The new object to the map again.
         return existing;
     }
+
+    @Override
+    public void deleteBeverageById(UUID beverageId) {
+        this.bMap.remove(beverageId);
+    }
 }

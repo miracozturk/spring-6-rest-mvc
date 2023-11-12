@@ -22,8 +22,14 @@ public class BeverageController {
 
     private final BeverageService bs;
 
+
+    @DeleteMapping("{beverageId}")
+    public ResponseEntity deleteBeverageByID(@PathVariable("beverageId") UUID beverageId){
+        this.bs.deleteBeverageById(beverageId);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
     @PutMapping("{beverageId}")
-    public ResponseEntity updateBeverageByID(@RequestParam("beverageId") UUID beverageId, @RequestBody Beverage beverage){
+    public ResponseEntity updateBeverageByID(@PathVariable("beverageId") UUID beverageId, @RequestBody Beverage beverage){
         Beverage bSaved = this.bs.updateBeverageById(beverageId, beverage);
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.LOCATION, "/api/v1/beverage/" + bSaved.getId());

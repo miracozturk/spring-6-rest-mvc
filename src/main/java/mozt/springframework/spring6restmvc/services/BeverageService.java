@@ -14,4 +14,6 @@ BeverageService {
     Beverage saveNewBeverage(Beverage beverage);
 
     Beverage updateBeverageById(UUID beverageId, Beverage beverage);
+
+    void deleteBeverageById(UUID beverageId);
 }
