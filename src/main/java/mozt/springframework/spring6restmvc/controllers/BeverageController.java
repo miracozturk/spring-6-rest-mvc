@@ -22,7 +22,11 @@ public class BeverageController {
 
     private final BeverageService bs;
 
-
+    @PatchMapping(value="{beverageId}")
+    public ResponseEntity patchBeverageById(@PathVariable("beverageId") UUID beverageId, @RequestBody Beverage beverage){
+        this.bs.patchBeverageById(beverageId, beverage);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
     @DeleteMapping("{beverageId}")
     public ResponseEntity deleteBeverageByID(@PathVariable("beverageId") UUID beverageId){
         this.bs.deleteBeverageById(beverageId);
