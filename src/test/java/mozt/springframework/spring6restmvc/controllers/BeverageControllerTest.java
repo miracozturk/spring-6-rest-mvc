@@ -1,6 +1,7 @@
 package mozt.springframework.spring6restmvc.controllers;
 
 
+import com.jayway.jsonpath.JsonPath;
 import mozt.springframework.spring6restmvc.services.BeverageService;
 import mozt.springframework.spring6restmvc.services.BeverageServiceImpl;
 import mozt.springframework.spring6restmvc.model.Beverage;
@@ -17,10 +18,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.hamcrest.core.Is.is;
 
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 
@@ -37,14 +39,27 @@ class BeverageControllerTest {
     BeverageServiceImpl bsImp = new BeverageServiceImpl();
 
     @Test
-    public void getBeverageById() throws Exception {
-        Beverage b = this.bsImp.listBeverages().get(0);
+    void testListBeverages() throws Exception {
+        given(bs.listBeverages()).willReturn(bsImp.listBeverages());
+        mockmvc.perform(get("/api/v1/beverage").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON) )
+                .andExpect(jsonPath("$.length()", is(3)));
+    }
 
-        given(bs.getBeverageById(any(UUID.class))).willReturn(b);
-        this.mockmvc.perform(get("/api/v1/beverage/" + UUID.randomUUID())
+    @Test
+    public void getBeverageById() throws Exception {
+        Beverage testB = this.bsImp.listBeverages().get(0);
+
+        given(bs.getBeverageById(testB.getId())).willReturn(testB);
+        this.mockmvc.perform(get("/api/v1/beverage/" + testB.getId())
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.id", is(testB.getId().toString())))
+                .andExpect(jsonPath("$.beverageName", is(testB.getBeverageName())));
+
+
     }
 
 }
