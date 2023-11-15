@@ -49,7 +49,7 @@ class CustomerControllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                 .content(this.objectMapper.writeValueAsString(c)))
                 .andExpect(status().isCreated())
-                .andExpect(header().exists("Location"));
+                .andExpect(header().exists("Location"));//if we write the "Locationxyz", then we will get an exception.
     }
 
     @Test
