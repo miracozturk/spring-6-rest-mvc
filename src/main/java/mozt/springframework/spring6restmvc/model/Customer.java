@@ -10,7 +10,7 @@ import java.util.UUID;
 public class Customer {
     private String customerName;
     private UUID id;
-    private int version;
+    private Integer version;
     private LocalDateTime createdDate;
     private LocalDateTime lastModifiedDate;
 }

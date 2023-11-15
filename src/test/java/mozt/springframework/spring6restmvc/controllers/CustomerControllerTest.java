@@ -1,5 +1,8 @@
 package mozt.springframework.spring6restmvc.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import mozt.springframework.spring6restmvc.model.Customer;
 import mozt.springframework.spring6restmvc.services.CustomerService;
 import mozt.springframework.spring6restmvc.services.CustomerServiceImpl;
@@ -11,8 +14,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.core.Is.is;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(CustomerController.class)
@@ -25,6 +30,27 @@ class CustomerControllerTest {
     CustomerService cs;
 
     CustomerServiceImpl custServImp = new CustomerServiceImpl();
+
+    @Autowired
+    ObjectMapper objectMapper;
+
+
+    @Test
+    void testCreateNewCustomer() throws Exception { //these methods just for testing the controller methods. Therefore We mock up the service layer.
+        Customer c = this.custServImp.listCustomers().get(0); // get any customer to produce a json
+        c.setCustomerName("new Customer");
+        c.setVersion(null);
+        c.setId(null);
+
+        given(this.cs.saveNewCustomer(any(Customer.class))).willReturn(this.custServImp.listCustomers().get(0));
+
+        mockMvc.perform(post("/api/v1/customer")
+                            .accept(MediaType.APPLICATION_JSON)
+                            .contentType(MediaType.APPLICATION_JSON)
+                .content(this.objectMapper.writeValueAsString(c)))
+                .andExpect(status().isCreated())
+                .andExpect(header().exists("Location"));
+    }
 
     @Test
     void listAllCustomers() throws Exception{
