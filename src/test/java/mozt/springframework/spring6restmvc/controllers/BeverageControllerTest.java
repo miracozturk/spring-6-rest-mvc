@@ -1,6 +1,8 @@
 package mozt.springframework.spring6restmvc.controllers;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import mozt.springframework.spring6restmvc.services.BeverageService;
 import mozt.springframework.spring6restmvc.services.BeverageServiceImpl;
@@ -36,7 +38,17 @@ class BeverageControllerTest {
     @MockBean
     BeverageService bs;
 
+    @Autowired
+    ObjectMapper objectMapper;
+
     BeverageServiceImpl bsImp = new BeverageServiceImpl();
+
+    @Test
+    void testCreateNewBeer() throws JsonProcessingException {
+        Beverage b = this.bsImp.listBeverages().get(0);
+        System.out.println(objectMapper.writeValueAsString(b));
+
+    }
 
     @Test
     void testListBeverages() throws Exception {
