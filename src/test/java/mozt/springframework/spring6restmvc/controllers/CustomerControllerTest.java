@@ -1,8 +1,6 @@
 package mozt.springframework.spring6restmvc.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import mozt.springframework.spring6restmvc.model.Customer;
 import mozt.springframework.spring6restmvc.services.CustomerService;
 import mozt.springframework.spring6restmvc.services.CustomerServiceImpl;

@@ -38,6 +38,7 @@ public class BeverageController {
     @PutMapping("{beverageId}")
     public ResponseEntity updateBeverageByID(@PathVariable("beverageId") UUID beverageId, @RequestBody Beverage beverage){
         Beverage bSaved = this.bs.updateBeverageById(beverageId, beverage);
+
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.LOCATION, "/api/v1/beverage/" + bSaved.getId());
 

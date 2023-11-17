@@ -15,10 +15,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.UUID;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.hamcrest.core.Is.is;
 
@@ -41,6 +43,22 @@ class BeverageControllerTest {
     void setup(){
         this.bsImp = new BeverageServiceImpl();
     }
+
+    @Test
+    void testUpdateBeverage() throws Exception {
+        Beverage b = this.bsImp.listBeverages().get(0);
+        //mocking up
+        //there is  no need below method???
+        given(this.bs.updateBeverageById(any(UUID.class), any(Beverage.class))).willReturn(b);
+        this.mockMvc.perform(put("/api/v1/beverage/" + b.getId())
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(this.objectMapper.writeValueAsString(b)))
+                .andExpect(status().isNoContent())
+                .andExpect(header().exists("Location"));
+        verify(bs).updateBeverageById(any(UUID.class),any(Beverage.class));//checks if this method habe been called 1 time.
+    }
+
 
     @Test
     void testCreateNewBeer() throws Exception {
