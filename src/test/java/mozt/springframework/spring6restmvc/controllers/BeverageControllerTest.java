@@ -11,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -41,11 +42,34 @@ class BeverageControllerTest {
     @Autowired
     ObjectMapper objectMapper;
 
+    @Captor
+    ArgumentCaptor<UUID> uuidCaptor;
+
+    @Captor
+    ArgumentCaptor<Beverage> beverageCaptor;
+
     BeverageServiceImpl bsImp;
 
     @BeforeEach
     void setup(){
         this.bsImp = new BeverageServiceImpl();
+    }
+
+    @Test
+    void testPatchBeverage() throws Exception{
+        Beverage b = this.bsImp.listBeverages().get(0);
+        b.setBeverageName("New Beverage");
+
+        mockMvc.perform(patch("/api/v1/beverage/" + b.getId())
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(this.objectMapper.writeValueAsString(b))
+        ).andExpect(status().isNoContent());
+
+        verify(this.bs).patchBeverageById(uuidCaptor.capture(), beverageCaptor.capture());
+
+        assertThat(b.getId()).isEqualTo(uuidCaptor.getValue());
+        assertThat(b.getBeverageName()).isEqualTo(beverageCaptor.getValue().getBeverageName());
     }
 
     @Test
