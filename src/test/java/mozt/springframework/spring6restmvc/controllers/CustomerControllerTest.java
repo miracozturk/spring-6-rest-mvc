@@ -7,12 +7,15 @@ import mozt.springframework.spring6restmvc.services.CustomerService;
 import mozt.springframework.spring6restmvc.services.CustomerServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -34,8 +37,33 @@ class CustomerControllerTest {
 
     CustomerServiceImpl custServImp = new CustomerServiceImpl();
 
+    @Captor
+    ArgumentCaptor<UUID> uuidCaptor;
+    @Captor
+    ArgumentCaptor<Customer> customerCaptor;
+
     @Autowired
     ObjectMapper objectMapper;
+
+    @Test
+    void testPatchCustomer() throws Exception{
+        Customer c = this.custServImp.listCustomers().get(0);
+
+        Map<String, Object> custMap = new HashMap<>();
+        custMap.put("customerName", "New Name");
+
+        mockMvc.perform(patch("/api/v1/customer/" + c.getId())
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(this.objectMapper.writeValueAsString(custMap))
+        ).andExpect(status().isNoContent());
+
+        verify(this.cs).patchCustomerById(uuidCaptor.capture(), customerCaptor.capture());
+
+        assertThat(c.getId()).isEqualTo(uuidCaptor.getValue());
+        assertThat(custMap.get("customerName")).isEqualTo(customerCaptor.getValue().getCustomerName());
+
+    }
 
     @Test
     void testDeleteCustomer() throws Exception {
@@ -46,7 +74,7 @@ class CustomerControllerTest {
                 .accept(MediaType.APPLICATION_JSON)
         ).andExpect(status().isNoContent());
 
-        ArgumentCaptor<UUID> uuidCaptor = ArgumentCaptor.forClass(UUID.class);
+
         verify(this.cs).deleteCustomerById(uuidCaptor.capture());
 
         assertThat(c.getId()).isEqualTo(uuidCaptor.getValue());
