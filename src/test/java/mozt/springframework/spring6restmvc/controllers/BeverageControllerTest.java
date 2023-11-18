@@ -6,17 +6,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import mozt.springframework.spring6restmvc.services.BeverageService;
 import mozt.springframework.spring6restmvc.services.BeverageServiceImpl;
 import mozt.springframework.spring6restmvc.model.Beverage;
+import net.bytebuddy.asm.Advice;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.UUID;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -42,6 +46,22 @@ class BeverageControllerTest {
     @BeforeEach
     void setup(){
         this.bsImp = new BeverageServiceImpl();
+    }
+
+    @Test
+    void testDeleteBeverage() throws Exception {
+
+        Beverage b = this.bsImp.listBeverages().get(0);
+
+        mockMvc.perform(delete("/api/v1/beverage/" + b.getId())
+                .accept(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isNoContent());
+
+        ArgumentCaptor<UUID> uuidCaptor = ArgumentCaptor.forClass(UUID.class);
+        verify(this.bs).deleteBeverageById(uuidCaptor.capture());
+
+        assertThat(b.getId()).isEqualTo(uuidCaptor.getValue());
+
     }
 
     @Test
