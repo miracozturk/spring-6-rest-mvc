@@ -38,7 +38,7 @@ class CustomerControllerTest {
     ObjectMapper objectMapper;
 
     @Test
-    void testDeleteBeverage() throws Exception {
+    void testDeleteCustomer() throws Exception {
 
         Customer c = this.custServImp.listCustomers().get(0);
 
@@ -53,6 +53,20 @@ class CustomerControllerTest {
 
     }
 
+    @Test
+    void testUpdateCustomer()  throws Exception{
+        Customer c = this.custServImp.listCustomers().get(0);
+        c.setCustomerName("new Customer");
+
+        this.mockMvc.perform(post("/api/v1/customer/" + c.getId())
+                                .accept(MediaType.APPLICATION_JSON)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(c))
+                            )
+                .andExpect(status().isNoContent());
+        verify(this.cs).updateCustomerById(any(UUID.class), any(Customer.class));
+
+    }
 
     @Test
     void testCreateNewCustomer() throws Exception { //these methods just for testing the controller methods. Therefore We mock up the service layer.
