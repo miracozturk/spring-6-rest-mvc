@@ -18,49 +18,47 @@ import java.util.UUID;
 @Slf4j
 @AllArgsConstructor
 @RestController
-@RequestMapping("/api/v1/customer")
 public class CustomerController {
+    public static final String CUSTOMER_PATH = "/api/v1/customer";
+    public static final String CUSTOMER_PATH_ID = CUSTOMER_PATH + "/{customerId}";
+
     private final CustomerService cs;
 
-
-    @PatchMapping(value="{customerId}")
+    @PatchMapping(value=CUSTOMER_PATH_ID)
     public ResponseEntity patchBeverageById(@PathVariable("customerId") UUID customerId, @RequestBody Customer customer){
         this.cs.patchCustomerById(customerId, customer);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
-    @DeleteMapping("{customerId}")
+    @DeleteMapping(CUSTOMER_PATH_ID)
     public ResponseEntity deleteCustomerByID(@PathVariable("customerId") UUID customerId){
         this.cs.deleteCustomerById(customerId);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
-    @PutMapping(value = "/{customerId}")
+    @PutMapping(value = CUSTOMER_PATH_ID)
     public ResponseEntity updateCustomerById(@PathVariable("customerId") UUID customerId, @RequestBody Customer customer) {
         this.cs.updateCustomerById(customerId, customer);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
-    @PostMapping
+    @PostMapping(CUSTOMER_PATH)
     public ResponseEntity handlePost(@RequestBody Customer cust) {
         Customer cRet = this.cs.saveNewCustomer(cust);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.LOCATION, "/api/v1/customer/" + cRet.getId());
+        headers.add(HttpHeaders.LOCATION, CUSTOMER_PATH + "/" +  cRet.getId());
 
         return new ResponseEntity(headers, HttpStatus.CREATED);
     }
 
-    @RequestMapping(method= RequestMethod.GET)
+    @GetMapping(CUSTOMER_PATH)
     public List<Customer> listCustomers(){
         log.debug("List customers in CustomerController:...");
         return this.cs.listCustomers();
     }
 
-    @RequestMapping(value="{customerId}", method= RequestMethod.GET)
+    @GetMapping(CUSTOMER_PATH_ID)
     public Customer getCustomerById(@PathVariable UUID customerId){
         log.debug("Getting the customer in Controller class by customerId : " + customerId);
         return  this.cs.getCustomerById(customerId);
     }
-
-
-
 }

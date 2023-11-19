@@ -60,7 +60,7 @@ class BeverageControllerTest {
         Beverage b = this.bsImp.listBeverages().get(0);
         b.setBeverageName("New Beverage");
 
-        mockMvc.perform(patch("/api/v1/beverage/" + b.getId())
+        mockMvc.perform(patch(BeverageController.BEVERAGE_PATH_ID, b.getId())
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.objectMapper.writeValueAsString(b))
@@ -77,7 +77,7 @@ class BeverageControllerTest {
 
         Beverage b = this.bsImp.listBeverages().get(0);
 
-        mockMvc.perform(delete("/api/v1/beverage/" + b.getId())
+        mockMvc.perform(delete(BeverageController.BEVERAGE_PATH_ID, b.getId())
                 .accept(MediaType.APPLICATION_JSON)
         ).andExpect(status().isNoContent());
 
@@ -94,7 +94,7 @@ class BeverageControllerTest {
         //mocking up
         //there is  no need below method???
         given(this.bs.updateBeverageById(any(UUID.class), any(Beverage.class))).willReturn(b);
-        this.mockMvc.perform(put("/api/v1/beverage/" + b.getId())
+        this.mockMvc.perform(put(BeverageController.BEVERAGE_PATH_ID, b.getId())
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(this.objectMapper.writeValueAsString(b)))
@@ -110,7 +110,7 @@ class BeverageControllerTest {
         b.setId(null);
         b.setVersion(null);
         given(this.bs.saveNewBeverage(any(Beverage.class))).willReturn(this.bsImp.listBeverages().get(1));
-        mockMvc.perform(post("/api/v1/beverage")
+        mockMvc.perform(post(BeverageController.BEVERAGE_PATH)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(b))
@@ -125,7 +125,7 @@ class BeverageControllerTest {
     @Test
     void testListBeverages() throws Exception {
         given(bs.listBeverages()).willReturn(bsImp.listBeverages());
-        mockMvc.perform(get("/api/v1/beverage").accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get(BeverageController.BEVERAGE_PATH).accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON) )
                 .andExpect(jsonPath("$.length()", is(3)));
@@ -136,7 +136,7 @@ class BeverageControllerTest {
         Beverage testB = this.bsImp.listBeverages().get(0);
 
         given(bs.getBeverageById(testB.getId())).willReturn(testB);
-        this.mockMvc.perform(get("/api/v1/beverage/" + testB.getId())
+        this.mockMvc.perform(get(BeverageController.BEVERAGE_PATH_ID, testB.getId())
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
