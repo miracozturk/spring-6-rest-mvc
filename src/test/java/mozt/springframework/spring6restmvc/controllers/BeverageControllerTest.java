@@ -132,6 +132,15 @@ class BeverageControllerTest {
     }
 
     @Test
+    void testgetBeverageByIdNotFound() throws Exception {
+        given(bs.getBeverageById(any(UUID.class))).willThrow(NotFoundException.class);
+        this.mockMvc.perform(get(BeverageController.BEVERAGE_PATH_ID, UUID.randomUUID())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+
+    }
+
+    @Test
     public void getBeverageById() throws Exception {
         Beverage testB = this.bsImp.listBeverages().get(0);
 

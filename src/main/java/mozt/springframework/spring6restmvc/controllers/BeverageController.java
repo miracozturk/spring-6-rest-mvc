@@ -61,7 +61,10 @@ public class BeverageController {
     public List<Beverage> listBeverages() {
         return this.bs.listBeverages();
     }
-
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity handleNotFoundException(){
+        return ResponseEntity.notFound().build();
+    }
     @RequestMapping(value = BEVERAGE_PATH_ID, method = RequestMethod.GET)
     public Beverage getBeverageById(@PathVariable("beverageId") UUID beverageId) { //or It can be just beverageId written without requestParam
         log.debug("Get Beverage by Id - In Controller Id: " + beverageId);
