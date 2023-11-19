@@ -4,10 +4,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-@ControllerAdvice
+//ResponseStatus annotation in NotFoundException class or these Annotations.
+//@ControllerAdvice
 public class ExceptionController {
 
-    @ExceptionHandler(NotFoundException.class)
+//    @ExceptionHandler(NotFoundException.class)
     public ResponseEntity handleNotFoundException(){
         return ResponseEntity.notFound().build();
     }
