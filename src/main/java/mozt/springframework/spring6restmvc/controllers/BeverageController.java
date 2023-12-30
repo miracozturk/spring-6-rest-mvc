@@ -1,18 +1,14 @@
 package mozt.springframework.spring6restmvc.controllers;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import mozt.springframework.spring6restmvc.model.Beverage;
+import mozt.springframework.spring6restmvc.model.BeverageDTO;
 import mozt.springframework.spring6restmvc.services.BeverageService;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,8 +22,8 @@ public class BeverageController {
     private final BeverageService bs;
 
     @PatchMapping(value=BEVERAGE_PATH_ID)
-    public ResponseEntity patchBeverageById(@PathVariable("beverageId") UUID beverageId, @RequestBody Beverage beverage){
-        this.bs.patchBeverageById(beverageId, beverage);
+    public ResponseEntity patchBeverageById(@PathVariable("beverageId") UUID beverageId, @RequestBody BeverageDTO beverageDTO){
+        this.bs.patchBeverageById(beverageId, beverageDTO);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
@@ -38,8 +34,8 @@ public class BeverageController {
     }
 
     @PutMapping(BEVERAGE_PATH_ID)
-    public ResponseEntity updateBeverageByID(@PathVariable("beverageId") UUID beverageId, @RequestBody Beverage beverage){
-        Beverage bSaved = this.bs.updateBeverageById(beverageId, beverage);
+    public ResponseEntity updateBeverageByID(@PathVariable("beverageId") UUID beverageId, @RequestBody BeverageDTO beverageDTO){
+        BeverageDTO bSaved = this.bs.updateBeverageById(beverageId, beverageDTO);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.LOCATION, "/api/v1/beverage/" + bSaved.getId());
@@ -49,8 +45,8 @@ public class BeverageController {
     }
 
     @PostMapping(BEVERAGE_PATH)
-    public ResponseEntity handlePost(@RequestBody Beverage beverage) {
-        Beverage bRet = this.bs.saveNewBeverage(beverage);
+    public ResponseEntity handlePost(@RequestBody BeverageDTO beverageDTO) {
+        BeverageDTO bRet = this.bs.saveNewBeverage(beverageDTO);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.LOCATION, "/api/v1/beverage" + bRet.getId());
@@ -59,12 +55,12 @@ public class BeverageController {
     }
 
     @RequestMapping(path = BEVERAGE_PATH, method = RequestMethod.GET)
-    public List<Beverage> listBeverages() {
+    public List<BeverageDTO> listBeverages() {
         return this.bs.listBeverages();
     }
 
     @RequestMapping(value = BEVERAGE_PATH_ID, method = RequestMethod.GET)
-    public Beverage getBeverageById(@PathVariable("beverageId") UUID beverageId) { //or It can be just beverageId written without requestParam
+    public BeverageDTO getBeverageById(@PathVariable("beverageId") UUID beverageId) { //or It can be just beverageId written without requestParam
         log.debug("Get Beverage by Id - In Controller Id: " + beverageId);
         return this.bs.getBeverageById(beverageId).orElseThrow(NotFoundException::new);
     }

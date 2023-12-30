@@ -1,9 +1,7 @@
 package mozt.springframework.spring6restmvc.services;
 
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import mozt.springframework.spring6restmvc.model.Beverage;
+import mozt.springframework.spring6restmvc.model.BeverageDTO;
 import mozt.springframework.spring6restmvc.model.BeverageStyle;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -22,13 +20,13 @@ import java.util.*;
 @Service
 public class BeverageServiceImpl implements BeverageService {
 
-    private Map<UUID, Beverage> bMap;
+    private Map<UUID, BeverageDTO> bMap;
 
 
     public BeverageServiceImpl(){
         this.bMap = new HashMap<>();
-        Beverage beverage1 =
-                Beverage.builder()
+        BeverageDTO beverageDTO1 =
+                BeverageDTO.builder()
                         .id(UUID.randomUUID())
                         .version(1)
                         .beverageName("Cocacola")
@@ -39,8 +37,8 @@ public class BeverageServiceImpl implements BeverageService {
                         .createdDate(LocalDateTime.now())
                         .updateDate(LocalDateTime.now())
                         .build();
-        Beverage beverage2 =
-                Beverage.builder()
+        BeverageDTO beverageDTO2 =
+                BeverageDTO.builder()
                         .id(UUID.randomUUID())
                         .version(1)
                         .beverageName("Fanta")
@@ -51,8 +49,8 @@ public class BeverageServiceImpl implements BeverageService {
                         .createdDate(LocalDateTime.now())
                         .updateDate(LocalDateTime.now())
                         .build();
-        Beverage beverage3 =
-                Beverage.builder()
+        BeverageDTO beverageDTO3 =
+                BeverageDTO.builder()
                         .id(UUID.randomUUID())
                         .version(1)
                         .beverageName("Ayran")
@@ -63,28 +61,28 @@ public class BeverageServiceImpl implements BeverageService {
                         .createdDate(LocalDateTime.now())
                         .updateDate(LocalDateTime.now())
                         .build();
-        bMap.put(beverage1.getId(), beverage1);
-        bMap.put(beverage2.getId(), beverage2);
-        bMap.put(beverage3.getId(), beverage3);
+        bMap.put(beverageDTO1.getId(), beverageDTO1);
+        bMap.put(beverageDTO2.getId(), beverageDTO2);
+        bMap.put(beverageDTO3.getId(), beverageDTO3);
     }
 
 
     @Override
-    public Optional<Beverage> getBeverageById(UUID id) {
+    public Optional<BeverageDTO> getBeverageById(UUID id) {
         log.debug("Getting Beverages by Id in Service: Id: " + id);
 
         return Optional.of(this.bMap.get(id));
     }
 
     @Override
-    public List<Beverage> listBeverages() {
+    public List<BeverageDTO> listBeverages() {
 
         return new ArrayList<>(this.bMap.values());
     }
 
     @Override
-    public Beverage saveNewBeverage(Beverage b) {
-        Beverage savedBeverage = Beverage.builder()
+    public BeverageDTO saveNewBeverage(BeverageDTO b) {
+        BeverageDTO savedBeverageDTO = BeverageDTO.builder()
                 .id(UUID.randomUUID())
                 .createdDate(LocalDateTime.now())
                 .updateDate(LocalDateTime.now())
@@ -95,20 +93,20 @@ public class BeverageServiceImpl implements BeverageService {
                 .upc(b.getUpc())
                 .price(b.getPrice())
                 .build();
-        this.bMap.put(savedBeverage.getId(), savedBeverage);
-        return savedBeverage;
+        this.bMap.put(savedBeverageDTO.getId(), savedBeverageDTO);
+        return savedBeverageDTO;
     }
 
     @Override
-    public Beverage updateBeverageById(UUID beverageId, Beverage newBeverage) {
-        Beverage existing = this.bMap.get(beverageId);
-        existing.setBeverageName(newBeverage.getBeverageName());
-        existing.setBeverageStyle(newBeverage.getBeverageStyle());
-        existing.setPrice(newBeverage.getPrice());
+    public BeverageDTO updateBeverageById(UUID beverageId, BeverageDTO newBeverageDTO) {
+        BeverageDTO existing = this.bMap.get(beverageId);
+        existing.setBeverageName(newBeverageDTO.getBeverageName());
+        existing.setBeverageStyle(newBeverageDTO.getBeverageStyle());
+        existing.setPrice(newBeverageDTO.getPrice());
         existing.setUpdateDate(LocalDateTime.now());
-        existing.setUpc(newBeverage.getUpc());
+        existing.setUpc(newBeverageDTO.getUpc());
         existing.setVersion(existing.getVersion() + 1);
-        existing.setQuantityOnHand(newBeverage.getQuantityOnHand());
+        existing.setQuantityOnHand(newBeverageDTO.getQuantityOnHand());
         //normally it is not required to put The new object to the map again.
         return existing;
     }
@@ -119,22 +117,22 @@ public class BeverageServiceImpl implements BeverageService {
     }
 
     @Override
-    public void patchBeverageById(UUID beverageId, Beverage beverage) {
-        Beverage e = this.bMap.get(beverageId);
-        if(StringUtils.hasText(beverage.getBeverageName())){
-            e.setBeverageName(beverage.getBeverageName());
+    public void patchBeverageById(UUID beverageId, BeverageDTO beverageDTO) {
+        BeverageDTO e = this.bMap.get(beverageId);
+        if(StringUtils.hasText(beverageDTO.getBeverageName())){
+            e.setBeverageName(beverageDTO.getBeverageName());
         }
-        if (beverage.getBeverageStyle() != null) {
-            e.setBeverageStyle(beverage.getBeverageStyle());
+        if (beverageDTO.getBeverageStyle() != null) {
+            e.setBeverageStyle(beverageDTO.getBeverageStyle());
         }
-        if (beverage.getPrice() != null) {
-            e.setPrice(beverage.getPrice());
+        if (beverageDTO.getPrice() != null) {
+            e.setPrice(beverageDTO.getPrice());
         }
-        if (StringUtils.hasText(beverage.getUpc()) ) {
-            e.setUpc(beverage.getUpc());
+        if (StringUtils.hasText(beverageDTO.getUpc()) ) {
+            e.setUpc(beverageDTO.getUpc());
         }
-        if (beverage.getQuantityOnHand() != null) {
-            e.setQuantityOnHand(beverage.getQuantityOnHand());
+        if (beverageDTO.getQuantityOnHand() != null) {
+            e.setQuantityOnHand(beverageDTO.getQuantityOnHand());
         }
     }
 }

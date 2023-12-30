@@ -1,7 +1,7 @@
 package mozt.springframework.spring6restmvc.services;
 
 import lombok.extern.slf4j.Slf4j;
-import mozt.springframework.spring6restmvc.model.Customer;
+import mozt.springframework.spring6restmvc.model.CustomerDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -12,23 +12,23 @@ import java.util.*;
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
-    private final Map<UUID, Customer> customerMap;
+    private final Map<UUID, CustomerDTO> customerMap;
 
     public CustomerServiceImpl() {
         this.customerMap = new HashMap<>();
-        Customer c1 = Customer.builder().customerName("CustomerName1")
+        CustomerDTO c1 = CustomerDTO.builder().customerName("CustomerName1")
                 .id(UUID.randomUUID())
                 .version(0)
                 .lastModifiedDate(LocalDateTime.now())
                 .createdDate(LocalDateTime.now())
                 .build();
-        Customer c2 = Customer.builder().customerName("CustomerName2")
+        CustomerDTO c2 = CustomerDTO.builder().customerName("CustomerName2")
                 .id(UUID.randomUUID())
                 .version(0)
                 .lastModifiedDate(LocalDateTime.now())
                 .createdDate(LocalDateTime.now())
                 .build();
-        Customer c3 = Customer.builder().customerName("CustomerName3")
+        CustomerDTO c3 = CustomerDTO.builder().customerName("CustomerName3")
                 .id(UUID.randomUUID())
                 .version(0)
                 .lastModifiedDate(LocalDateTime.now())
@@ -42,35 +42,35 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<Customer> listCustomers() {
+    public List<CustomerDTO> listCustomers() {
         return new ArrayList<>(this.customerMap.values());
     }
 
     @Override
-    public Optional<Customer> getCustomerById(UUID customerId) {
+    public Optional<CustomerDTO> getCustomerById(UUID customerId) {
         return Optional.of(this.customerMap.get(customerId));
     }
 
     @Override
-    public Customer saveNewCustomer(Customer cust) {
+    public CustomerDTO saveNewCustomer(CustomerDTO cust) {
 
 
-        Customer savedCustomer = Customer.builder()
+        CustomerDTO savedCustomerDTO = CustomerDTO.builder()
                 .id(UUID.randomUUID())
                 .customerName(cust.getCustomerName())
                 .createdDate(LocalDateTime.now())
                 .lastModifiedDate(LocalDateTime.now())
                 .version(1)
                 .build();
-        this.customerMap.put(savedCustomer.getId(), savedCustomer);
-        log.debug("Customer Id: {}", savedCustomer.getId());
-        return savedCustomer;
+        this.customerMap.put(savedCustomerDTO.getId(), savedCustomerDTO);
+        log.debug("Customer Id: {}", savedCustomerDTO.getId());
+        return savedCustomerDTO;
     }
 
     @Override
-    public void updateCustomerById(UUID customerId, Customer customer) {
-        Customer exists = this.customerMap.get(customerId);
-        exists.setCustomerName(customer.getCustomerName());
+    public void updateCustomerById(UUID customerId, CustomerDTO customerDTO) {
+        CustomerDTO exists = this.customerMap.get(customerId);
+        exists.setCustomerName(customerDTO.getCustomerName());
         exists.setLastModifiedDate(LocalDateTime.now());
         exists.setVersion(exists.getVersion() + 1);
         //no need reput to map this.customerMap.put(customerId, exist)
@@ -83,10 +83,10 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void patchCustomerById(UUID customerId, Customer customer) {
-        Customer c = this.customerMap.get(customerId);
-        if(StringUtils.hasText(customer.getCustomerName())){
-            c.setCustomerName(customer.getCustomerName());
+    public void patchCustomerById(UUID customerId, CustomerDTO customerDTO) {
+        CustomerDTO c = this.customerMap.get(customerId);
+        if(StringUtils.hasText(customerDTO.getCustomerName())){
+            c.setCustomerName(customerDTO.getCustomerName());
         }
     }
 }

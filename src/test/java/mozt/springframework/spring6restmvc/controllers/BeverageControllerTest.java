@@ -2,7 +2,7 @@ package mozt.springframework.spring6restmvc.controllers;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import mozt.springframework.spring6restmvc.model.Beverage;
+import mozt.springframework.spring6restmvc.model.BeverageDTO;
 import mozt.springframework.spring6restmvc.services.BeverageService;
 import mozt.springframework.spring6restmvc.services.BeverageServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -44,7 +44,7 @@ class BeverageControllerTest {
     ArgumentCaptor<UUID> uuidCaptor;
 
     @Captor
-    ArgumentCaptor<Beverage> beverageCaptor;
+    ArgumentCaptor<BeverageDTO> beverageCaptor;
 
     BeverageServiceImpl bsImp;
 
@@ -55,7 +55,7 @@ class BeverageControllerTest {
 
     @Test
     void testPatchBeverage() throws Exception{
-        Beverage b = this.bsImp.listBeverages().get(0);
+        BeverageDTO b = this.bsImp.listBeverages().get(0);
         b.setBeverageName("New Beverage");
 
         mockMvc.perform(patch(BeverageController.BEVERAGE_PATH_ID, b.getId())
@@ -73,7 +73,7 @@ class BeverageControllerTest {
     @Test
     void testDeleteBeverage() throws Exception {
 
-        Beverage b = this.bsImp.listBeverages().get(0);
+        BeverageDTO b = this.bsImp.listBeverages().get(0);
 
         mockMvc.perform(delete(BeverageController.BEVERAGE_PATH_ID, b.getId())
                 .accept(MediaType.APPLICATION_JSON)
@@ -88,26 +88,26 @@ class BeverageControllerTest {
 
     @Test
     void testUpdateBeverage() throws Exception {
-        Beverage b = this.bsImp.listBeverages().get(0);
+        BeverageDTO b = this.bsImp.listBeverages().get(0);
         //mocking up
         //there is  no need below method???
-        given(this.bs.updateBeverageById(any(UUID.class), any(Beverage.class))).willReturn(b);
+        given(this.bs.updateBeverageById(any(UUID.class), any(BeverageDTO.class))).willReturn(b);
         this.mockMvc.perform(put(BeverageController.BEVERAGE_PATH_ID, b.getId())
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(this.objectMapper.writeValueAsString(b)))
                 .andExpect(status().isNoContent())
                 .andExpect(header().exists("Location"));
-        verify(bs).updateBeverageById(any(UUID.class),any(Beverage.class));//checks if this method has been called 1 time.
+        verify(bs).updateBeverageById(any(UUID.class),any(BeverageDTO.class));//checks if this method has been called 1 time.
     }
 
 
     @Test
     void testCreateNewBeer() throws Exception {
-        Beverage b = this.bsImp.listBeverages().get(0);
+        BeverageDTO b = this.bsImp.listBeverages().get(0);
         b.setId(null);
         b.setVersion(null);
-        given(this.bs.saveNewBeverage(any(Beverage.class))).willReturn(this.bsImp.listBeverages().get(1));
+        given(this.bs.saveNewBeverage(any(BeverageDTO.class))).willReturn(this.bsImp.listBeverages().get(1));
         mockMvc.perform(post(BeverageController.BEVERAGE_PATH)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -140,7 +140,7 @@ class BeverageControllerTest {
 
     @Test
     public void getBeverageById() throws Exception {
-        Beverage testB = this.bsImp.listBeverages().get(0);
+        BeverageDTO testB = this.bsImp.listBeverages().get(0);
 
         given(bs.getBeverageById(testB.getId())).willReturn(Optional.of(testB));
         this.mockMvc.perform(get(BeverageController.BEVERAGE_PATH_ID, testB.getId())
