@@ -1,33 +1,30 @@
 package mozt.springframework.spring6restmvc.controllers;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import mozt.springframework.spring6restmvc.model.Beverage;
 import mozt.springframework.spring6restmvc.services.BeverageService;
 import mozt.springframework.spring6restmvc.services.BeverageServiceImpl;
-import mozt.springframework.spring6restmvc.model.Beverage;
-import net.bytebuddy.asm.Advice;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.core.Is.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.hamcrest.core.Is.is;
 
 
 @WebMvcTest(BeverageController.class)
@@ -41,6 +38,7 @@ class BeverageControllerTest {
 
     @Autowired
     ObjectMapper objectMapper;
+    //objectMapper.findAndRegisterModules(); for example to import DateTime object modules.
 
     @Captor
     ArgumentCaptor<UUID> uuidCaptor;
@@ -100,7 +98,7 @@ class BeverageControllerTest {
                         .content(this.objectMapper.writeValueAsString(b)))
                 .andExpect(status().isNoContent())
                 .andExpect(header().exists("Location"));
-        verify(bs).updateBeverageById(any(UUID.class),any(Beverage.class));//checks if this method habe been called 1 time.
+        verify(bs).updateBeverageById(any(UUID.class),any(Beverage.class));//checks if this method has been called 1 time.
     }
 
 
@@ -144,7 +142,7 @@ class BeverageControllerTest {
     public void getBeverageById() throws Exception {
         Beverage testB = this.bsImp.listBeverages().get(0);
 
-        given(bs.getBeverageById(testB.getId())).willReturn(testB);
+        given(bs.getBeverageById(testB.getId())).willReturn(Optional.of(testB));
         this.mockMvc.perform(get(BeverageController.BEVERAGE_PATH_ID, testB.getId())
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())

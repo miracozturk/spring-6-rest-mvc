@@ -70,10 +70,10 @@ public class BeverageServiceImpl implements BeverageService {
 
 
     @Override
-    public Beverage getBeverageById(UUID id) {
+    public Optional<Beverage> getBeverageById(UUID id) {
         log.debug("Getting Beverages by Id in Service: Id: " + id);
 
-        return this.bMap.get(id);
+        return Optional.of(this.bMap.get(id));
     }
 
     @Override

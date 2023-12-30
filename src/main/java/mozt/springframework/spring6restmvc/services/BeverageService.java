@@ -3,11 +3,12 @@ package mozt.springframework.spring6restmvc.services;
 import mozt.springframework.spring6restmvc.model.Beverage;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface
 BeverageService {
-    Beverage getBeverageById(UUID beverageId);
+    Optional<Beverage> getBeverageById(UUID beverageId);
 
     List<Beverage> listBeverages();
 

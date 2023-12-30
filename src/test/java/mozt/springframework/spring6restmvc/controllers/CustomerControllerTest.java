@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -131,7 +132,7 @@ class CustomerControllerTest {
     void getCustomerById() throws Exception {
         Customer c = custServImp.listCustomers().get(0);
 
-        given(cs.getCustomerById(c.getId())).willReturn(c);
+        given(cs.getCustomerById(c.getId())).willReturn(Optional.of(c));
 
         mockMvc.perform(get(CustomerController.CUSTOMER_PATH_ID, c.getId())
                         .accept(MediaType.APPLICATION_JSON))

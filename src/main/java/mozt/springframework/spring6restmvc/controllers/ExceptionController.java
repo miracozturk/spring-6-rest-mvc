@@ -6,8 +6,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 //ResponseStatus annotation in NotFoundException class or these Annotations.
 //@ControllerAdvice
-public class ExceptionController {
-
+ public class ExceptionController {
+//to use this method uncomment below annotation
+    //ıt has been commented for the sake of more efficient method.
 //    @ExceptionHandler(NotFoundException.class)
     public ResponseEntity handleNotFoundException(){
         return ResponseEntity.notFound().build();

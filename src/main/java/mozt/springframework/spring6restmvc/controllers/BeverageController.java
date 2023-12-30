@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mozt.springframework.spring6restmvc.model.Beverage;
 import mozt.springframework.spring6restmvc.services.BeverageService;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -65,7 +66,15 @@ public class BeverageController {
     @RequestMapping(value = BEVERAGE_PATH_ID, method = RequestMethod.GET)
     public Beverage getBeverageById(@PathVariable("beverageId") UUID beverageId) { //or It can be just beverageId written without requestParam
         log.debug("Get Beverage by Id - In Controller Id: " + beverageId);
-        return this.bs.getBeverageById(beverageId);
+        return this.bs.getBeverageById(beverageId).orElseThrow(NotFoundException::new);
     }
+
+    //to catch all exception that is throwed by methods of this class
+    //the annotation and the method below can be used. We have more efficient way to do this.
+    //Hence it is commented to be used in future.
+//    @ExceptionHandler()
+//    public ResponseEntity handleNotFoundException(){
+//        return ResponseEntity.notFound().build();
+//    }
 
 }

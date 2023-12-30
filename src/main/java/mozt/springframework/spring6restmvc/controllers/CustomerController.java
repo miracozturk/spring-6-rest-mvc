@@ -59,6 +59,6 @@ public class CustomerController {
     @GetMapping(CUSTOMER_PATH_ID)
     public Customer getCustomerById(@PathVariable UUID customerId){
         log.debug("Getting the customer in Controller class by customerId : " + customerId);
-        return  this.cs.getCustomerById(customerId);
+        return  this.cs.getCustomerById(customerId).orElseThrow(NotFoundException::new);
     }
 }
