@@ -38,18 +38,18 @@ public class BeverageController {
         BeverageDTO bSaved = this.bs.updateBeverageById(beverageId, beverageDTO);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.LOCATION, "/api/v1/beverage/" + bSaved.getId());
+        headers.add(HttpHeaders.LOCATION, BEVERAGE_PATH + "/" +  bSaved.getId());
 
         ResponseEntity responseEntity = new ResponseEntity(headers, HttpStatus.NO_CONTENT);
         return responseEntity;
     }
 
     @PostMapping(BEVERAGE_PATH)
-    public ResponseEntity handlePost(@RequestBody BeverageDTO beverageDTO) {
+    public ResponseEntity saveNewBeverage(@RequestBody BeverageDTO beverageDTO) {
         BeverageDTO bRet = this.bs.saveNewBeverage(beverageDTO);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.LOCATION, "/api/v1/beverage" + bRet.getId());
+        headers.add(HttpHeaders.LOCATION, BEVERAGE_PATH + "/" +  bRet.getId());
 
         return new ResponseEntity(headers, HttpStatus.CREATED);
     }
